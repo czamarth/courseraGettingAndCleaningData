@@ -1,0 +1,28 @@
+#question 1
+ss06hid <- read.csv("D:/documents/coursera/courseraGettingAndCleaningData/quiz1/ss06hid.csv")
+length(ss06hid$VAL[ss06hid$VAL==24 & !is.na(ss06hid$VAL)])
+rm(ss06hid)
+#question 3
+library(xlsx)
+dat <- read.xlsx(file="getdata-data-DATA.gov_NGAP.xlsx", rowIndex=18:23, colIndex=7:15, sheetIndex=1)
+sum(dat$Zip*dat$Ext,na.rm=T)
+rm(dat)
+#question 4
+library(XML)
+doc <- xmlTreeParse(file="getdata-data-restaurants.xml", useInternalNodes = TRUE)
+rootNode <- xmlRoot(doc)
+zipCodes<-as.vector(xpathApply(doc=rootNode, "//zipcode", xmlValue))
+length(zipCodes[zipCodes==21231])
+rm(doc)
+rm(rootNode)
+rm(zipCodes)
+#question 5
+library(data.table)
+download.file(url="https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv", destfile="ss06pid.csv")
+DT<-fread(input="ss06pid.csv", sep=",", header=TRUE)
+system.time(mean(DT$pwgtp15,by=DT$SEX))
+system.time(rowMeans(DT)[DT$SEX==1])
+system.time(rowMeans(DT)[DT$SEX==2])
+system.time(DT[,mean(pwgtp15),by=SEX])
+system.time(tapply(DT$pwgtp15,DT$SEX,mean))
+rm(DT)
